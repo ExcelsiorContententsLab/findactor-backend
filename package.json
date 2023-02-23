@@ -2,7 +2,7 @@
   "type": "module",
   "scripts": {
     "start": "node --experimental-modules ./src/index.js",
-    "start:production": "pm2 start -f ./src/index.js"
+    "start:production": "pm2 delete all && pm2 start ./src/index.js"
   },
   "devDependencies": {
     "eslint": "^8.34.0",
