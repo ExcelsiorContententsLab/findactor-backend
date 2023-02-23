@@ -16,6 +16,21 @@ server.get('/hello', (req, res) => {
   res.send('Hello World');
 });
 
+server.get('/auditions', (req, res) => {
+  const { productionName } = req.query;
+
+  const { auditions } = db.data;
+
+  if (!productionName) {
+    res.send(auditions);
+    return;
+  }
+
+  res.send(auditions.filter((audition) => (
+    audition.productionName === productionName
+  )));
+});
+
 server.post('/auditions', async (req, res) => {
   const auditionData = req.body;
 
