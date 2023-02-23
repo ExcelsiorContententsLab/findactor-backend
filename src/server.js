@@ -65,6 +65,25 @@ server.patch('/auditions', async (req, res) => {
   res.status(200).send();
 });
 
+server.patch('/auditions/close', async (req, res) => {
+  const { auditionTitle } = req.query;
+
+  if (!auditionTitle) {
+    res.status(400).send();
+    return;
+  }
+
+  const { auditions } = db.data;
+
+  const audition = auditions.find((a) => a.title === auditionTitle);
+
+  audition.isClosed = true;
+
+  await db.write();
+
+  res.status(200).send();
+});
+
 server.get('/auditions/applied', (req, res) => {
   const { auditionTitle } = req.query;
 
