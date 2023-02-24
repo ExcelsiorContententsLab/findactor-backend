@@ -143,4 +143,44 @@ server.get('/initialize', async (req, res) => {
   res.status(200).send();
 });
 
+function filterByEmail({ actors, email }) {
+  return actors.filter((a) => a.email !== email);
+}
+
+server.patch('/auditions/:auditionTitle/applicants', async (req, res) => {
+  const { auditionTitle } = req.params;
+  const { operationType, actorEmail } = req.query;
+
+  const { auditions, actors } = db.data;
+
+  const audition = auditions.find(({ title }) => auditionTitle === title);
+  const actor = actors.find(({ email }) => email === actorEmail);
+
+  const {
+    appliedAuditionees,
+    passedAuditionees,
+    pendingAuditionees,
+    rejectedAuditionees,
+  } = audition;
+
+  audition.appliedAuditionees = filterByEmail({ actors: appliedAuditionees, email: actorEmail });
+  audition.passedAuditionees = filterByEmail({ actors: passedAuditionees, email: actorEmail });
+  audition.pendingAuditionees = filterByEmail({ actors: pendingAuditionees, email: actorEmail });
+  audition.rejectedAuditionees = filterByEmail({ actors: rejectedAuditionees, email: actorEmail });
+
+  if (operationType === 'accept') {
+    audition.passedAuditionees.push(actor);
+  }
+  if (operationType === 'reject') {
+    audition.rejectedAuditionees.push(actor);
+  }
+  if (operationType === 'postpone') {
+    audition.pendingAuditionees.push(actor);
+  }
+
+  await db.write();
+
+  res.status(200).send();
+});
+
 export default server;
