@@ -92,7 +92,7 @@ server.get('/auditions/applied', (req, res) => {
     return;
   }
 
-  const { auditions, actors } = db.data;
+  const { auditions } = db.data;
 
   const {
     appliedAuditionees,
@@ -101,12 +101,10 @@ server.get('/auditions/applied', (req, res) => {
     passedAuditionees,
   } = auditions.find((a) => a.title === auditionTitle);
 
-  const actor = actors.find((a) => a.email === 'zoonyfil@nate.com');
-
-  const isApplied = appliedAuditionees.includes(actor)
-    || pendingAuditionees.includes(actor)
-    || rejectedAuditionees.includes(actor)
-    || passedAuditionees.includes(actor);
+  const isApplied = appliedAuditionees.some((a) => a.email === 'zoonyfil@nate.com')
+    || pendingAuditionees.some((a) => a.email === 'zoonyfil@nate.com')
+    || rejectedAuditionees.some((a) => a.email === 'zoonyfil@nate.com')
+    || passedAuditionees.some((a) => a.email === 'zoonyfil@nate.com');
 
   res.send(isApplied);
 });
