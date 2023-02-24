@@ -143,10 +143,6 @@ server.get('/initialize', async (req, res) => {
   res.status(200).send();
 });
 
-function filterByEmail({ actors, email }) {
-  return actors.filter((a) => a.email !== email);
-}
-
 server.patch('/auditions/:auditionTitle/applicants', async (req, res) => {
   const { auditionTitle } = req.params;
   const { operationType, actorEmail } = req.query;
@@ -163,10 +159,10 @@ server.patch('/auditions/:auditionTitle/applicants', async (req, res) => {
     rejectedAuditionees,
   } = audition;
 
-  audition.appliedAuditionees = filterByEmail({ actors: appliedAuditionees, email: actorEmail });
-  audition.passedAuditionees = filterByEmail({ actors: passedAuditionees, email: actorEmail });
-  audition.pendingAuditionees = filterByEmail({ actors: pendingAuditionees, email: actorEmail });
-  audition.rejectedAuditionees = filterByEmail({ actors: rejectedAuditionees, email: actorEmail });
+  audition.appliedAuditionees = appliedAuditionees.filter((a) => a.email !== actorEmail);
+  audition.passedAuditionees = passedAuditionees.filter((a) => a.email !== actorEmail);
+  audition.pendingAuditionees = pendingAuditionees.filter((a) => a.email !== actorEmail);
+  audition.rejectedAuditionees = rejectedAuditionees.filter((a) => a.email !== actorEmail);
 
   if (operationType === 'accept') {
     audition.passedAuditionees.push(actor);
