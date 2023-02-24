@@ -155,6 +155,8 @@ server.get('/initialize', async (req, res) => {
     };
   });
 
+  db.data.requests = [];
+
   await db.write();
 
   res.status(200).send();
