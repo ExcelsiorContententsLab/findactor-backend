@@ -121,4 +121,26 @@ server.post('/auditions', async (req, res) => {
   res.send(newId);
 });
 
+server.get('/initialize', async (req, res) => {
+  const { auditions } = db.data;
+
+  db.data.auditions = auditions.map((audition) => {
+    if (audition.productionName !== '(주)엑셀시오르콘텐츠랩') {
+      return audition;
+    }
+
+    return {
+      ...audition,
+      isClosed: false,
+      appliedAuditionees: audition.appliedAuditionees.filter(({ name }) => (
+        name !== '이승찬'
+      )),
+    };
+  });
+
+  await db.write();
+
+  res.status(200).send();
+});
+
 export default server;
