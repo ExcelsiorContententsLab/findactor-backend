@@ -229,4 +229,14 @@ server.get('/requests/requested', async (req, res) => {
   );
 });
 
+server.get('/requests', async (req, res) => {
+  const { actorEmail } = req.query;
+
+  const { requests } = db.data;
+
+  res.status(200).send(
+    requests.filter((request) => request.actorEmail === actorEmail),
+  );
+});
+
 export default server;
