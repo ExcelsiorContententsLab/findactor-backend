@@ -198,4 +198,35 @@ server.patch('/auditions/:auditionTitle/applicants', async (req, res) => {
   res.status(200).send();
 });
 
+server.post('/requests', async (req, res) => {
+  const { audition, actorEmail, auditionTitle } = req.body;
+
+  const { requests } = db.data;
+
+  requests.push({
+    id: nanoid(),
+    actorEmail,
+    auditionTitle,
+    audition,
+  });
+
+  await db.write();
+
+  res.status(201).send();
+});
+
+server.get('/requests/requested', async (req, res) => {
+  const { actorEmail, auditionTitle } = req.query;
+
+  const { requests } = db.data;
+
+  await db.write();
+
+  res.status(200).send(
+    requests.some((request) => (
+      request.actorEmail === actorEmail && request.auditionTitle === auditionTitle
+    )),
+  );
+});
+
 export default server;
