@@ -92,11 +92,21 @@ server.get('/auditions/applied', (req, res) => {
     return;
   }
 
-  const { auditions } = db.data;
+  const { auditions, actors } = db.data;
 
-  const audition = auditions.find((a) => a.title === auditionTitle);
+  const {
+    appliedAuditionees,
+    pendingAuditionees,
+    rejectedAuditionees,
+    passedAuditionees,
+  } = auditions.find((a) => a.title === auditionTitle);
 
-  const isApplied = audition.appliedAuditionees.some(({ email }) => email === 'zoonyfil@nate.com');
+  const actor = actors.find((a) => a.email === 'zoonyfil@nate.com');
+
+  const isApplied = appliedAuditionees.includes(actor)
+    || pendingAuditionees.includes(actor)
+    || rejectedAuditionees.includes(actor)
+    || passedAuditionees.includes(actor);
 
   res.send(isApplied);
 });
