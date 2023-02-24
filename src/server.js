@@ -145,6 +145,15 @@ server.get('/initialize', async (req, res) => {
       appliedAuditionees: audition.appliedAuditionees.filter(({ name }) => (
         name !== '이승찬'
       )),
+      passedAuditionees: audition.passedAuditionees.filter(({ name }) => (
+        name !== '이승찬'
+      )),
+      pendingAuditionees: audition.pendingAuditionees.filter(({ name }) => (
+        name !== '이승찬'
+      )),
+      rejectedAuditionees: audition.rejectedAuditionees.filter(({ name }) => (
+        name !== '이승찬'
+      )),
     };
   });
 
