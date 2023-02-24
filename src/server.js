@@ -237,4 +237,30 @@ server.get('/requests', async (req, res) => {
   );
 });
 
+server.patch('/requests/reject', async (req, res) => {
+  const { actorEmail, auditionTitle } = req.query;
+
+  const { requests } = db.data;
+
+  const request = requests
+    .find((a) => a.actorEmail === actorEmail && a.auditionTitle === auditionTitle);
+
+  request.isRejected = true;
+
+  await db.write();
+
+  res.status(200).send();
+});
+
+server.get('/requests/reject', async (req, res) => {
+  const { actorEmail, auditionTitle } = req.query;
+
+  const { requests } = db.data;
+
+  const request = requests
+    .find((a) => a.actorEmail === actorEmail && a.auditionTitle === auditionTitle);
+
+  res.status(200).send(request.isRejected);
+});
+
 export default server;
