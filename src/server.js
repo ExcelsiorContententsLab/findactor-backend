@@ -230,9 +230,23 @@ server.get('/requests/requested', async (req, res) => {
 });
 
 server.get('/requests', async (req, res) => {
-  const { actorEmail } = req.query;
+  const { actorEmail, productionName } = req.query;
 
   const { requests } = db.data;
+
+  if (!actorEmail && !productionName) {
+    res.status(200).send(requests);
+    return;
+  }
+
+  if (!actorEmail) {
+    res.status(200).send(
+      requests.filter((request) => (
+        !request.audition.isClosed && request.audition.productionName === productionName
+      )),
+    );
+    return;
+  }
 
   res.status(200).send(
     requests.filter((request) => request.actorEmail === actorEmail),
